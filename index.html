@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta 
+    name="viewport" 
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0" 
+  />
+
+  <title>Aniversario Especial</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      color: #fff7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top, rgba(255, 120, 120, 0.18), transparent 35%),
+        linear-gradient(135deg, #240006, #4a0712, #7a1020);
+      padding: 24px 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      top: -120px;
+      left: -120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      width: 520px;
+      height: 520px;
+      bottom: -180px;
+      right: -180px;
+      border-radius: 50%;
+      background: rgba(255, 210, 210, 0.08);
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 90%;
+      max-width: 620px;
+      padding: 42px 32px;
+      border-radius: 28px;
+      background: rgba(35, 0, 8, 0.76);
+      border: 1px solid rgba(255, 210, 210, 0.22);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(14px);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(255, 230, 230, 0.12);
+      border: 1px solid rgba(255, 230, 230, 0.22);
+      color: #ffd7d7;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 36px;
+      color: #ffffff;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+    }
+
+    .subtitle {
+      margin: 18px 0 26px;
+      font-size: 14px;
+      color: #ffdada;
+      line-height: 1.8;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      max-width: 340px;
+      padding: 15px 16px;
+      margin: 10px 0;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 210, 210, 0.38);
+      background: rgba(255, 255, 255, 0.96);
+      color: #3b0009;
+      font-size: 16px;
+      outline: none;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      font-weight: 700;
+    }
+
+    input::placeholder {
+      color: #8a2a35;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    input:focus {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(255, 220, 220, 0.18);
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 14px 32px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ffffff, #ffd1d1);
+      color: #4a0712;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.36);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #contenido {
+      display: none;
+    }
+
+    #temporizador {
+      margin: 28px auto 18px;
+      padding: 22px 14px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #4a0712;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      box-shadow: inset 0 0 0 1px rgba(74, 7, 18, 0.16);
+    }
+
+    .fecha {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #ffd1d1;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .aviso {
+      margin: 20px auto 0;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 210, 210, 0.22);
+      color: #ffe4e4;
+      font-size: 12px;
+      line-height: 1.7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    #codigoRevelado {
+      display: none;
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #ffffff, #ffd1d1);
+      color: #4a0712;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      word-break: break-word;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      animation: aparecer 0.8s ease forwards;
+    }
+
+    #codigoRevelado span {
+      display: block;
+      margin-bottom: 10px;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      opacity: 0.9;
+      text-transform: uppercase;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: scale(0.94) translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .error {
+      min-height: 22px;
+      margin-top: 12px;
+      color: #ffd1d1;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .footer-text {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #ffd1d1;
+      line-height: 1.7;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+    }
+
+    .heart-line {
+      margin: 22px 0 6px;
+      color: #ffffff;
+      letter-spacing: 8px;
+      font-size: 18px;
+    }
+
+    .acertijos {
+      margin-top: 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .acertijo-box {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 210, 210, 0.22);
+      opacity: 0.72;
+    }
+
+    .acertijo-box.activo {
+      opacity: 1;
+      border-color: rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .acertijo-box.resuelto {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .acertijo-box.expirado {
+      opacity: 0.45;
+    }
+
+    .acertijo-titulo {
+      margin: 0 0 10px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .acertijo-hora {
+      margin: 0 0 14px;
+      color: #ffd1d1;
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .acertijo-texto {
+      margin: 0 0 16px;
+      color: #ffdada;
+      font-size: 12px;
+      line-height: 1.6;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .acertijo-pregunta {
+      margin: 12px 0;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      line-height: 1.6;
+    }
+
+    .mensaje-acertijo {
+      min-height: 22px;
+      margin-top: 14px;
+      color: #ffd1d1;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 34px 22px;
+      }
+
+      h1 {
+        font-size: 28px;
+        letter-spacing: 1.8px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+      }
+
+      #temporizador {
+        font-size: 34px;
+        letter-spacing: 2px;
+        padding: 18px 10px;
+      }
+
+      #codigoRevelado {
+        font-size: 26px;
+        letter-spacing: 2px;
+      }
+
+      button {
+        width: 100%;
+        max-width: 340px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+
+    <div id="login">
+      <div class="badge">ACCESO ESPECIAL</div>
+
+      <h1>NUESTRO ANIVERSARIO</h1>
+
+      <p class="subtitle">
+        ESTA PÁGINA GUARDA UNA PEQUEÑA SORPRESA PARA UN MOMENTO ESPECIAL.
+        INTRODUCE LA CONTRASEÑA PARA CONTINUAR.
+      </p>
+
+      <input type="password" id="password" placeholder="CONTRASEÑA" />
+      <br>
+
+      <button onclick="comprobarPassword()">ENTRAR</button>
+
+      <p id="error" class="error"></p>
+
+      <div class="heart-line">♡ ♡ ♡</div>
+
+      <p class="footer-text">
+        UN DETALLE PREPARADO CON CARIÑO.
+      </p>
+    </div>
+
+    <div id="contenido">
+      <div class="badge">CUENTA ATRÁS</div>
+
+      <h1>FALTA MUY POCO</h1>
+
+      <p class="subtitle">
+        CADA HORA SE ACTIVARÁ UN ACERTIJO. SI LO RESUELVES A TIEMPO, RESTARÁS 30 MINUTOS.
+      </p>
+
+      <div id="temporizador">00:00:00</div>
+
+      <p class="fecha">
+        LA SORPRESA SE REVELARÁ HOY A LAS 21:00, HORA DE CANARIAS.
+      </p>
+
+      <div class="aviso">
+        IMPORTANTE: DEJA ESTA PESTAÑA ABIERTA EN EL IPHONE Y NO USES MODO PRIVADO.
+        LOS ACIERTOS SE GUARDAN EN ESTE NAVEGADOR, PERO SE PUEDEN PERDER SI SE BORRAN LOS DATOS DE SAFARI.
+      </div>
+
+      <div id="codigoRevelado"></div>
+
+      <div class="acertijos">
+
+        <div class="acertijo-box" id="boxAcertijo1">
+          <p class="acertijo-titulo">ACERTIJO 1</p>
+          <p class="acertijo-hora">DISPONIBLE DE 14:00 A 15:00</p>
+
+          <p class="acertijo-texto">
+            ESTE ACERTIJO SOLO ESTARÁ DISPONIBLE DURANTE UNA HORA.
+          </p>
+
+          <p class="acertijo-pregunta">
+            CUANTO MÁS ME QUITAS, MÁS GRANDE ME HAGO. ¿QUÉ SOY?
+          </p>
+
+          <input type="text" id="respuestaAcertijo1" placeholder="ESCRIBE TU RESPUESTA" />
+          <br>
+
+          <button id="botonAcertijo1" onclick="comprobarAcertijo(1)">
+            COMPROBAR
+          </button>
+
+          <p id="mensajeAcertijo1" class="mensaje-acertijo"></p>
+        </div>
+
+        <div class="acertijo-box" id="boxAcertijo2">
+          <p class="acertijo-titulo">ACERTIJO 2</p>
+          <p class="acertijo-hora">DISPONIBLE DE 15:00 A 16:00</p>
+
+          <p class="acertijo-texto">
+            ESTE ACERTIJO SOLO ESTARÁ DISPONIBLE DURANTE UNA HORA.
+          </p>
+
+          <p class="acertijo-pregunta">
+            TENGO AGUJAS, PERO NO SÉ COSER. TENGO NÚMEROS, PERO NO SÉ CONTAR. ¿QUÉ SOY?
+          </p>
+
+          <input type="text" id="respuestaAcertijo2" placeholder="ESCRIBE TU RESPUESTA" />
+          <br>
+
+          <button id="botonAcertijo2" onclick="comprobarAcertijo(2)">
+            COMPROBAR
+          </button>
+
+          <p id="mensajeAcertijo2" class="mensaje-acertijo"></p>
+        </div>
+
+        <div class="acertijo-box" id="boxAcertijo3">
+          <p class="acertijo-titulo">ACERTIJO 3</p>
+          <p class="acertijo-hora">DISPONIBLE DE 16:00 A 17:00</p>
+
+          <p class="acertijo-texto">
+            ESTE ACERTIJO SOLO ESTARÁ DISPONIBLE DURANTE UNA HORA.
+          </p>
+
+          <p class="acertijo-pregunta">
+            BLANCO POR DENTRO, VERDE POR FUERA. SI QUIERES QUE TE LO DIGA, ESPERA. ¿QUÉ ES?
+          </p>
+
+          <input type="text" id="respuestaAcertijo3" placeholder="ESCRIBE TU RESPUESTA" />
+          <br>
+
+          <button id="botonAcertijo3" onclick="comprobarAcertijo(3)">
+            COMPROBAR
+          </button>
+
+          <p id="mensajeAcertijo3" class="mensaje-acertijo"></p>
+        </div>
+
+        <div class="acertijo-box" id="boxAcertijo4">
+          <p class="acertijo-titulo">ACERTIJO 4</p>
+          <p class="acertijo-hora">DISPONIBLE DE 17:00 A 18:00</p>
+
+          <p class="acertijo-texto">
+            ESTE ACERTIJO SOLO ESTARÁ DISPONIBLE DURANTE UNA HORA.
+          </p>
+
+          <p class="acertijo-pregunta">
+            NO SE VE, NO SE TOCA, PERO SIEMPRE TE TOCA LA CARA CUANDO SOPLA. ¿QUÉ ES?
+          </p>
+
+          <input type="text" id="respuestaAcertijo4" placeholder="ESCRIBE TU RESPUESTA" />
+          <br>
+
+          <button id="botonAcertijo4" onclick="comprobarAcertijo(4)">
+            COMPROBAR
+          </button>
+
+          <p id="mensajeAcertijo4" class="mensaje-acertijo"></p>
+        </div>
+
+        <div class="acertijo-box" id="boxAcertijo5">
+          <p class="acertijo-titulo">ACERTIJO 5</p>
+          <p class="acertijo-hora">DISPONIBLE DE 18:00 A 19:00</p>
+
+          <p class="acertijo-texto">
+            ESTE ACERTIJO SOLO ESTARÁ DISPONIBLE DURANTE UNA HORA.
+          </p>
+
+          <p class="acertijo-pregunta">
+            TENGO CIUDADES, PERO NO CASAS. TENGO MONTAÑAS, PERO NO ÁRBOLES. TENGO AGUA, PERO NO PECES. ¿QUÉ SOY?
+          </p>
+
+          <input type="text" id="respuestaAcertijo5" placeholder="ESCRIBE TU RESPUESTA" />
+          <br>
+
+          <button id="botonAcertijo5" onclick="comprobarAcertijo(5)">
+            COMPROBAR
+          </button>
+
+          <p id="mensajeAcertijo5" class="mensaje-acertijo"></p>
+        </div>
+
+      </div>
+
+      <div class="heart-line">♡ ♡ ♡</div>
+
+      <p class="footer-text">
+        GRACIAS POR SER PARTE DE MI VIDA.
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    const PASSWORD_CORRECTA = "11MAYO";
+
+    // Cambia este código alfanumérico por el definitivo.
+    const CODIGO_SECRETO = "A7K9-Q2M4";
+
+    // Hoy, 9 de mayo de 2026, a las 21:00 hora de Canarias.
+    // En mayo, Canarias está en UTC+1.
+    const FECHA_FINAL_BASE = new Date("2026-05-09T21:00:00+01:00");
+
+    const MINUTOS_RESTA_ACERTIJO = 30;
+
+    // Claves únicas para guardar la información en este navegador.
+    // Si algún día quieres reiniciar todo, cambia "v4" por "v5".
+    const PREFIJO_GUARDADO = "aniversario_11mayo_v4_";
+
+    const CLAVE_FECHA_FINAL = PREFIJO_GUARDADO + "fechaFinalActual";
+    const CLAVE_CODIGO_REVELADO = PREFIJO_GUARDADO + "codigoRevelado";
+
+    const ACERTIJOS = [
+      {
+        numero: 1,
+        inicio: new Date("2026-05-09T14:00:00+01:00"),
+        fin: new Date("2026-05-09T15:00:00+01:00"),
+        respuestas: ["AGUJERO", "UNAGUJERO", "HUECO", "UNHUECO"]
+      },
+      {
+        numero: 2,
+        inicio: new Date("2026-05-09T15:00:00+01:00"),
+        fin: new Date("2026-05-09T16:00:00+01:00"),
+        respuestas: ["RELOJ", "UNRELOJ"]
+      },
+      {
+        numero: 3,
+        inicio: new Date("2026-05-09T16:00:00+01:00"),
+        fin: new Date("2026-05-09T17:00:00+01:00"),
+        respuestas: ["PERA", "UNAPERA"]
+      },
+      {
+        numero: 4,
+        inicio: new Date("2026-05-09T17:00:00+01:00"),
+        fin: new Date("2026-05-09T18:00:00+01:00"),
+        respuestas: ["VIENTO", "ELVIENTO", "AIRE", "ELAIRE"]
+      },
+      {
+        numero: 5,
+        inicio: new Date("2026-05-09T18:00:00+01:00"),
+        fin: new Date("2026-05-09T19:00:00+01:00"),
+        respuestas: ["MAPA", "UNMAPA"]
+      }
+    ];
+
+    let intervalo = null;
+
+    let fechaFinalGuardada = obtenerDato(CLAVE_FECHA_FINAL);
+
+    let fechaFinalActual = fechaFinalGuardada
+      ? new Date(fechaFinalGuardada)
+      : FECHA_FINAL_BASE;
+
+    if (isNaN(fechaFinalActual.getTime())) {
+      fechaFinalActual = FECHA_FINAL_BASE;
+      guardarDato(CLAVE_FECHA_FINAL, fechaFinalActual.toISOString());
+    }
+
+    function comprobarPassword() {
+      const password = document.getElementById("password").value;
+      const error = document.getElementById("error");
+
+      const passwordLimpia = limpiarTexto(password);
+
+      if (passwordLimpia === PASSWORD_CORRECTA) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("contenido").style.display = "block";
+
+        iniciarPagina();
+      } else {
+        error.textContent = "CONTRASEÑA INCORRECTA. INTÉNTALO DE NUEVO.";
+      }
+    }
+
+    function iniciarPagina() {
+      actualizarTemporizador();
+      actualizarEstadoAcertijos();
+
+      clearInterval(intervalo);
+
+      intervalo = setInterval(() => {
+        actualizarTemporizador();
+        actualizarEstadoAcertijos();
+      }, 1000);
+    }
+
+    function actualizarTemporizador() {
+      const ahora = new Date();
+      const diferencia = fechaFinalActual - ahora;
+
+      if (obtenerDato(CLAVE_CODIGO_REVELADO) === "true") {
+        document.getElementById("temporizador").textContent = "00:00:00";
+        revelarCodigo();
+        return;
+      }
+
+      if (diferencia <= 0) {
+        clearInterval(intervalo);
+        document.getElementById("temporizador").textContent = "00:00:00";
+        guardarDato(CLAVE_CODIGO_REVELADO, "true");
+        revelarCodigo();
+        return;
+      }
+
+      const segundosTotales = Math.floor(diferencia / 1000);
+
+      const horas = Math.floor(segundosTotales / 3600);
+      const minutos = Math.floor((segundosTotales % 3600) / 60);
+      const segundos = segundosTotales % 60;
+
+      document.getElementById("temporizador").textContent =
+        String(horas).padStart(2, "0") + ":" +
+        String(minutos).padStart(2, "0") + ":" +
+        String(segundos).padStart(2, "0");
+    }
+
+    function revelarCodigo() {
+      const cajaCodigo = document.getElementById("codigoRevelado");
+
+      cajaCodigo.innerHTML = `
+        <span>TU CÓDIGO ESPECIAL ES:</span>
+        ${CODIGO_SECRETO}
+      `;
+
+      cajaCodigo.style.display = "block";
+    }
+
+    function comprobarAcertijo(numero) {
+      const acertijo = ACERTIJOS.find(a => a.numero === numero);
+      const ahora = new Date();
+
+      const input = document.getElementById("respuestaAcertijo" + numero);
+      const mensaje = document.getElementById("mensajeAcertijo" + numero);
+
+      if (estaResuelto(numero)) {
+        mensaje.textContent = "ESTE ACERTIJO YA HA SIDO RESUELTO Y GUARDADO.";
+        return;
+      }
+
+      if (ahora < acertijo.inicio) {
+        mensaje.textContent = "ESTE ACERTIJO TODAVÍA NO ESTÁ DISPONIBLE.";
+        return;
+      }
+
+      if (ahora >= acertijo.fin) {
+        mensaje.textContent = "EL TIEMPO DE ESTE ACERTIJO YA HA TERMINADO.";
+        actualizarEstadoAcertijos();
+        return;
+      }
+
+      const respuestaUsuario = limpiarTexto(input.value);
+
+      if (acertijo.respuestas.includes(respuestaUsuario)) {
+        guardarDato(claveAcertijo(numero), "true");
+
+        fechaFinalActual = new Date(
+          fechaFinalActual.getTime() - MINUTOS_RESTA_ACERTIJO * 60 * 1000
+        );
+
+        guardarDato(CLAVE_FECHA_FINAL, fechaFinalActual.toISOString());
+
+        mensaje.textContent = "CORRECTO. HAS RESTADO 30 MINUTOS AL TEMPORIZADOR. SE HA GUARDADO EN ESTE NAVEGADOR.";
+
+        actualizarTemporizador();
+        actualizarEstadoAcertijos();
+      } else {
+        mensaje.textContent = "RESPUESTA INCORRECTA. INTÉNTALO DE NUEVO.";
+      }
+    }
+
+    function actualizarEstadoAcertijos() {
+      const ahora = new Date();
+
+      ACERTIJOS.forEach(acertijo => {
+        const numero = acertijo.numero;
+
+        const box = document.getElementById("boxAcertijo" + numero);
+        const boton = document.getElementById("botonAcertijo" + numero);
+        const input = document.getElementById("respuestaAcertijo" + numero);
+        const mensaje = document.getElementById("mensajeAcertijo" + numero);
+        const pregunta = box.querySelector(".acertijo-pregunta");
+        const texto = box.querySelector(".acertijo-texto");
+
+        box.classList.remove("activo", "resuelto", "expirado");
+
+        if (estaResuelto(numero)) {
+          box.classList.add("resuelto");
+
+          pregunta.style.display = "block";
+          texto.style.display = "block";
+
+          boton.disabled = true;
+          input.disabled = true;
+          input.placeholder = "ACERTIJO RESUELTO";
+
+          if (!mensaje.textContent || mensaje.textContent === "ESTE ACERTIJO SE REVELARÁ A SU HORA.") {
+            mensaje.textContent = "ACERTIJO RESUELTO Y GUARDADO.";
+          }
+
+          return;
+        }
+
+        if (ahora < acertijo.inicio) {
+          pregunta.style.display = "none";
+          texto.style.display = "none";
+
+          boton.disabled = true;
+          input.disabled = true;
+          input.placeholder = "TODAVÍA NO DISPONIBLE";
+
+          mensaje.textContent = "ESTE ACERTIJO SE REVELARÁ A SU HORA.";
+
+          return;
+        }
+
+        if (ahora >= acertijo.fin) {
+          box.classList.add("expirado");
+
+          pregunta.style.display = "none";
+          texto.style.display = "none";
+
+          boton.disabled = true;
+          input.disabled = true;
+          input.placeholder = "TIEMPO TERMINADO";
+
+          mensaje.textContent = "ESTE ACERTIJO YA HA EXPIRADO.";
+
+          return;
+        }
+
+        box.classList.add("activo");
+
+        pregunta.style.display = "block";
+        texto.style.display = "block";
+
+        boton.disabled = false;
+        input.disabled = false;
+        input.placeholder = "ESCRIBE TU RESPUESTA";
+
+        if (
+          mensaje.textContent === "" ||
+          mensaje.textContent === "ESTE ACERTIJO SE REVELARÁ A SU HORA."
+        ) {
+          mensaje.textContent = "ACERTIJO ACTIVO AHORA.";
+        }
+      });
+    }
+
+    function estaResuelto(numero) {
+      return obtenerDato(claveAcertijo(numero)) === "true";
+    }
+
+    function claveAcertijo(numero) {
+      return PREFIJO_GUARDADO + "acertijo" + numero + "Resuelto";
+    }
+
+    function limpiarTexto(texto) {
+      return texto
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s/g, "")
+        .replace(/[.,;:¿?¡!'"-]/g, "")
+        .trim();
+    }
+
+    function guardarDato(clave, valor) {
+      try {
+        localStorage.setItem(clave, valor);
+      } catch (error) {
+        alert("NO SE HA PODIDO GUARDAR LA INFORMACIÓN. EVITA USAR MODO PRIVADO Y DEJA LA PESTAÑA ABIERTA.");
+      }
+    }
+
+    function obtenerDato(clave) {
+      try {
+        return localStorage.getItem(clave);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    document.getElementById("password").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        comprobarPassword();
+      }
+    });
+
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById("respuestaAcertijo" + i).addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+          comprobarAcertijo(i);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
