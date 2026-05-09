@@ -427,7 +427,7 @@
 
       <div class="aviso">
         IMPORTANTE: DEJA ESTA PESTAÑA ABIERTA EN EL IPHONE Y NO USES MODO PRIVADO.
-        LOS ACIERTOS SE GUARDAN EN ESTE NAVEGADOR, PERO SE PUEDEN PERDER SI SE BORRAN LOS DATOS DE SAFARI.
+        LOS ACIERTOS Y EL ACCESO SE GUARDAN EN ESTE NAVEGADOR, PERO SE PUEDEN PERDER SI SE BORRAN LOS DATOS DE SAFARI.
       </div>
 
       <div id="codigoRevelado"></div>
@@ -568,11 +568,12 @@
     const MINUTOS_RESTA_ACERTIJO = 30;
 
     // Claves únicas para guardar la información en este navegador.
-    // Si algún día quieres reiniciar todo, cambia "v4" por "v5".
-    const PREFIJO_GUARDADO = "aniversario_11mayo_v4_";
+    // Si algún día quieres reiniciar todo, cambia "v5" por "v6".
+    const PREFIJO_GUARDADO = "aniversario_11mayo_v5_";
 
     const CLAVE_FECHA_FINAL = PREFIJO_GUARDADO + "fechaFinalActual";
     const CLAVE_CODIGO_REVELADO = PREFIJO_GUARDADO + "codigoRevelado";
+    const CLAVE_ACCESO_CONCEDIDO = PREFIJO_GUARDADO + "accesoConcedido";
 
     const ACERTIJOS = [
       {
@@ -627,13 +628,17 @@
       const passwordLimpia = limpiarTexto(password);
 
       if (passwordLimpia === PASSWORD_CORRECTA) {
-        document.getElementById("login").style.display = "none";
-        document.getElementById("contenido").style.display = "block";
-
-        iniciarPagina();
+        guardarDato(CLAVE_ACCESO_CONCEDIDO, "true");
+        mostrarContenido();
       } else {
         error.textContent = "CONTRASEÑA INCORRECTA. INTÉNTALO DE NUEVO.";
       }
+    }
+
+    function mostrarContenido() {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("contenido").style.display = "block";
+      iniciarPagina();
     }
 
     function iniciarPagina() {
@@ -843,6 +848,12 @@
         return null;
       }
     }
+
+    window.addEventListener("load", function() {
+      if (obtenerDato(CLAVE_ACCESO_CONCEDIDO) === "true") {
+        mostrarContenido();
+      }
+    });
 
     document.getElementById("password").addEventListener("keydown", function(event) {
       if (event.key === "Enter") {
